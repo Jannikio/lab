@@ -1,0 +1,24 @@
+name: lab
+on:
+  release:
+    types: [published]
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "TIMESTAMP=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+      - uses: robinraju/release-downloader@v1.3
+        with:
+          repository: "Jannikio/lab"
+          latest: true
+          tarBall: true
+          zipBall: true
+          fileName: "*"
+      - uses: valist-io/valist-github-action@v2.1.0
+        with:
+          rpc-url: https://rpc.valist.io/polygon
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          account: nasdf
+          project: lab
+          release: ${{ env.TIMESTAMP }}
+          files: '**'
